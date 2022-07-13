@@ -16,21 +16,35 @@ describe('default parameters - types and syntax - 2', () => {
                 zakk instanceof Function
             ];
 
-        expect(typeof zakk).toEqual( /* YOUR ANSWER HERE */ );
+        expect(typeof zakk).toEqual("object");
 
         /* SWAP THE INDEX 99 TO THE CORRECT VALUE */
-        expect(instances[99]).toEqual(true);
+        expect(instances[5]).toEqual(true);
     });
 })
 
 describe('creating own object with properties and methods - types and syntax - 2', () => {
-    let car;
+    
+let car;
 
     beforeEach(() => {
         // define the car object (properties and methods) to pass the following tests
         car = {
-            startEngine() {
-                return;
+            name: 'Ford',
+            model: 'Focus',
+            color: 'silver',
+            engineRunning: false,
+
+            startEngine: function() {
+                this.engineRunning = true;
+            },
+
+            stopEngine: function() {
+                this.engineRunning = false;
+            },
+
+            changeColor: function(color) {
+                this.color = color;
             }
         };
     })
@@ -89,6 +103,18 @@ describe('creating own object with properties and methods - types and syntax - 2
         // Extend the created object with properties and methods
 
         let newCar = Object.create(car);
+
+        newCar = {
+            climatronicOn: false,
+
+            startClimatronic: function() {
+                this.climatronicOn=true;
+            },
+
+            stopClimatronic: function() {
+                this.climatronicOn=false;
+            }
+        }
         /* add properties and methods to the newCar object */
 
         const spyOnStartClimatronic = jest.spyOn(newCar, "startClimatronic");
@@ -140,7 +166,7 @@ describe('hoisting - types and syntax - 2', () => {
         var c = 3;
         log(a, b, c);
 
-        expect(logMemory).toEqual( /* YOUR ANSWER HERE */ );
+        expect(logMemory).toEqual([undefined, undefined, undefined, 1, undefined, 3]);
     });
 
     test('should create variables per function memory frame', () => {
@@ -152,17 +178,17 @@ describe('hoisting - types and syntax - 2', () => {
         })();
         log(a);
 
-        expect(logMemory).toEqual( /* YOUR ANSWER HERE */ );
+        expect(logMemory).toEqual([undefined, 1, undefined]);
     });
 
     test('should create undefined before function initialization', () => {
-        expect(typeof Add).toEqual( /* YOUR ANSWER HERE */ );
+        expect(typeof Add).toEqual("undefined");
 
         var Add = function(a, b) {
             return a + b;
         }
 
-        expect(typeof Add).toEqual( /* YOUR ANSWER HERE */ );
+        expect(typeof Add).toEqual("function");
     });
 })
 
@@ -170,21 +196,38 @@ describe('creating functions with constructors - types and syntax - 2', () => {
     let CarConstructor;
     beforeEach(() => {
         //define the CarConstructor (it should take three parameters - name, model and color)
-        CarConstructor = function(/* arguments */){
-            /* properties and methods */
+        CarConstructor = function(name, model, color){
+            
+            this.name = name,
+            this.model = model,
+            this.color = color,
+
+            this.getName = function() {
+                return this.name;
+            };
+    
+            this.getModel = function() {
+                return this.model;
+            };
+    
+            this.changeColor = function(color) {
+                this.color = color;
+            }
         }
+        
+       
     });
     test('should have own properties', () => {
         // create car passing the name, model and color to the CarConstructor (using the 'new' operator)
-        let car;
-        expect(car.name).toEqual( /* YOUR ANSWER HERE */ );
-        expect(car.model).toEqual( /* YOUR ANSWER HERE */ );
-        expect(car.color).toEqual( /* YOUR ANSWER HERE */ );
+        car = new CarConstructor("Ford", "Focus", "silver");
+        expect(car.name).toEqual("Ford");
+        expect(car.model).toEqual("Focus");
+        expect(car.color).toEqual("silver");
     });
 
     test('should have own methods', () => {
         // create car passing the name, model and color to the CarConstructor (using the 'new' operator)
-        let car;
+        car = new CarConstructor("Ford", "Focus", "silver");
         expect(car.hasOwnProperty("getName")).toEqual(true);
         expect(car.hasOwnProperty("getModel")).toEqual(true);
         expect(car.hasOwnProperty("changeColor")).toEqual(true);
@@ -192,14 +235,14 @@ describe('creating functions with constructors - types and syntax - 2', () => {
 
     test('checking methods logic', () => {
         // create car passing the name, model and color to the CarConstructor (using the 'new' operator)
-        let car;
+        car = new CarConstructor("Ford", "Focus", "silver");
         const spyOnChangeColor = jest.spyOn(car, "changeColor");
 
-        expect(car.getName()).toEqual( /* YOUR ANSWER HERE */ );
-        expect(car.getModel()).toEqual( /* YOUR ANSWER HERE */ );
-        expect(car.color).toEqual( /* YOUR ANSWER HERE */ );
+        expect(car.getName()).toEqual("Ford");
+        expect(car.getModel()).toEqual("Focus");
+        expect(car.color).toEqual("silver");
         car.changeColor("orange");
         expect(spyOnChangeColor).toHaveBeenCalled();
-        expect(car.color).toEqual( /* YOUR ANSWER HERE */ );
+        expect(car.color).toEqual("orange");
     });
 })
